@@ -1,0 +1,14 @@
+on:
+  workflow_call:
+    inputs:
+        username:
+          required: true
+          type: string
+    #    vkey: 
+    #      required: true
+    #     type: string
+    secrets:
+        veracode-api-id:
+            required: true
+        veracode-api-key:
+            required: true
