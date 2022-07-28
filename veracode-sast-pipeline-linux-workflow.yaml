@@ -1,14 +1,61 @@
+name: Veracode Pipeline SAST Reusable Workflow
+
 on:
   workflow_call:
     inputs:
-        username:
-          required: true
-          type: string
-    #    vkey: 
-    #      required: true
-    #     type: string
+      artifact-name:
+        required: true
+        type: string
     secrets:
-        veracode-api-id:
-            required: true
-        veracode-api-key:
-            required: true
+      veracode-api-id:
+        required: true
+      veracode-api-key:
+        required: true
+        
+jobs:
+  pipeline-sast:
+    name: Veracode Pipeline SAST
+    runs-on: ubuntu-latest
+
+    steps:
+      # Prepare environment   
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.4.1
+        with:
+          # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
+          java-version: '11'
+          distribution: 'microsoft'
+
+      - name: Verify Java
+        run: 'java --version'
+
+      - name: Download the Pipeline Scanner
+        uses: wei/curl@master
+        with:
+          args: -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
+      
+      - name: Unzip the Pipeline Scanner
+        run: unzip pipeline-scan-LATEST.zip
+           
+      - name: Get Present Directory
+        run: pwd
+    
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        with:
+          # Artifact name
+          name: ${{inputs.artifact-name}}
+          # Destination path
+          path: ${{github.workspace}}
+          
+      - name: Confirm Contents
+        run: ls -la
+      
+      - name: Run Pipeline Scanner
+        run: java -Dpipeline.debug=false -jar pipeline-scan.jar --veracode_api_id "${{secrets.veracode-api-id}}" --veracode_api_key "${{secrets.veracode-api-key}}" --file "application.zip" -jf veracode-pipeline-results.json --fail_on_severity="Very High, High"
+
+      - name: Upload analysis results
+        uses: actions/upload-artifact@v2
+        with:
+            name: veracode-pipeline-results.json
+            path: ${{github.workspace}}/veracode-pipeline-results.json
