@@ -53,7 +53,7 @@ jobs:
             # createprofile
             createprofile: true
             # filepath
-            filepath: ${{github.workspace}}/application.zip
+            filepath: /github/workspace/application.zip
             # version
             version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
             # vid
