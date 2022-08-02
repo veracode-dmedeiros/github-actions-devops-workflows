@@ -1,1 +1,96 @@
+name: Veracode Platform SAST Reusable Workflow
 
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        required: true
+        type: string
+    secrets:
+      veracode-api-id:
+        required: true
+      veracode-api-key:
+        required: true
+        
+jobs:
+  platform-sast:
+    name: Veracode Pipeline SAST
+    runs-on: ubuntu-latest
+
+    steps:
+      # Prepare environment   
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.4.1
+        with:
+          # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
+          java-version: '11'
+          distribution: 'microsoft'
+
+      - name: Verify Java
+        run: 'java --version'
+
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        with:
+          # Artifact name
+          name: ${{inputs.artifact-name}}
+          # Destination path
+          path: ${{github.workspace}}
+          
+      - name: Confirm Contents
+        run: ls -la
+      
+      - name: Run Platform Analysis
+        run: echo platform fun
+        
+      - name: Veracode Upload And Scan
+        # You may pin to the exact commit or the version.
+        # uses: veracode/veracode-uploadandscan-action@35794dab9fbcd28fac19e44963f80646b27f4a7f
+        uses: veracode/veracode-uploadandscan-action@0.2.4
+        with:
+            # appname
+            appname: ${{ github.repository }}
+            # createprofile
+            createprofile: true
+            # filepath
+            filepath: ${{github.workspace}}
+            # version
+            version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+            # vid
+            vid: ${{secrets.veracode-api-id}}
+            # vkey
+            vkey: ${{secrets.veracode-api-key}}
+            # true or false
+            # createsandbox: # optional
+            # name of the sandbox
+            # sandboxname: # optional
+            # wait X minutes for the scan to complete
+            # scantimeout: # optional
+            # modules to exclude from module selection
+            # exclude: # optional
+            # modules to include in module selection
+            # include: # optional
+            # business criticality - policy selection
+            # criticality: # optional
+            # filename pattern
+            # pattern: # optional
+            # replacement
+            # replacement: # optional
+            # specify to scan in a sandbox
+            # sandboxid: # optional
+            # All top level modules
+            # scanallnonfataltoplevelmodules: # optional
+            # platform selected modules
+            # selected: # optional
+            # selected modules like from previous scan
+            # selectedpreviously: # optional
+            # teams
+            # teams: # optional
+            # teams
+            # toplevel: # optional
+            # automatically delete the current scan if there are any errors when uploading files or starting the scan
+            # deleteincompletescan: # optional
+            # specify version of the Java API Wrapper; default is latest
+            # javawrapperversion: # optional
+            # show detailed diagnostic information, which you can use for debugging, in the output.
+            # debug: # optional
