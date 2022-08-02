@@ -49,11 +49,11 @@ jobs:
         uses: veracode/veracode-uploadandscan-action@0.2.4
         with:
             # appname
-            appname: ${{ github.repository }}
+            appname: GitHub-Actions-Verademo-Sample
             # createprofile
             createprofile: true
             # filepath
-            filepath: ${{github.workspace}}
+            filepath: ${{github.workspace}}/application.zip
             # version
             version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
             # vid
