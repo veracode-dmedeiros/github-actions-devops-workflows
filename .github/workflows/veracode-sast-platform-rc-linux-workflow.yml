@@ -1,4 +1,4 @@
-name: Veracode Platform SAST Reusable Workflow
+name: Veracode Release Candidate SAST Workflow
 
 on:
   workflow_call:
@@ -47,9 +47,9 @@ jobs:
             # vkey
             vkey: ${{secrets.veracode-api-key}}
             # true or false
-            # createsandbox: # optional
+            createsandbox: true
             # name of the sandbox
-            # sandboxname: # optional
+            sandboxname: 'Release Candidate'
             # wait X minutes for the scan to complete
             # scantimeout: # optional
             # modules to exclude from module selection
