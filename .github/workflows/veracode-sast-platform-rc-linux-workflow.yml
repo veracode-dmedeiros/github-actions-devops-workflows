@@ -35,7 +35,7 @@ jobs:
         uses: veracode/veracode-uploadandscan-action@0.2.4
         with:
             # appname
-            appname: ${GITHUB_WORKSPACE}
+            appname: ${{github.workspace}}
             # createprofile
             createprofile: true
             # filepath
