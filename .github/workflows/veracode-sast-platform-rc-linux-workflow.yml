@@ -3,6 +3,9 @@ name: Veracode Release Candidate SAST Workflow
 on:
   workflow_call:
     inputs:
+      profile-name:
+        required: true
+        type: string
       artifact-name:
         required: true
         type: string
@@ -34,7 +37,7 @@ jobs:
         uses: veracode/veracode-uploadandscan-action@0.2.4
         with:
             # appname
-            appname: ${{github.repository.name}}
+            appname: ${{inputs.profile-name}}
             # createprofile
             createprofile: true
             # filepath
