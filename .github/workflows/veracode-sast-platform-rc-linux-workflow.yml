@@ -35,7 +35,7 @@ jobs:
         uses: veracode/veracode-uploadandscan-action@0.2.4
         with:
             # appname
-            appname: GitHub-Actions-Verademo-Sample
+            appname: ${GITHUB_WORKSPACE}
             # createprofile
             createprofile: true
             # filepath
