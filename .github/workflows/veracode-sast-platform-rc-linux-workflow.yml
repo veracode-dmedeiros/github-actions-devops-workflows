@@ -28,6 +28,8 @@ jobs:
           # Destination path
           path: ${{github.workspace}}
           
+      - name: Current Directory
+        run: pwd
       - name: Confirm Contents
         run: ls -la
         
@@ -41,7 +43,7 @@ jobs:
             # createprofile
             createprofile: true
             # filepath
-            filepath: ${{github.workspace}}/application.zip
+            filepath: ${{github.workspace}}
             # version
             version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
             # vid
