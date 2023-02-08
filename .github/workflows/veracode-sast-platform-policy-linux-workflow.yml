@@ -3,6 +3,9 @@ name: Veracode Platform Policy SAST Workflow
 on:
   workflow_call:
     inputs:
+      policy-name: 
+        required: true
+        type: string
       artifact-name:
         required: true
         type: string
@@ -14,12 +17,11 @@ on:
         
 jobs:
   platform-sast:
-    name: Veracode Pipeline SAST
     runs-on: ubuntu-latest
 
     steps:
       - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.0.0
+        uses: actions/download-artifact@v3.0.2
         with:
           # Artifact name
           name: ${{inputs.artifact-name}}
@@ -35,11 +37,11 @@ jobs:
         uses: veracode/veracode-uploadandscan-action@0.2.4
         with:
             # appname
-            appname: GitHub-Actions-Verademo-Sample
+            appname: ${input.policy-name}
             # createprofile
             createprofile: true
             # filepath
-            filepath: /github/workspace/application.zip
+            filepath: ./application.zip
             # version
             version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
             # vid
